@@ -2,207 +2,235 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HASHU-MD FF CLONE PRO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HASHU-MD | CYBER APP STORE</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; overflow: hidden; font-family: 'Arial Black', sans-serif; }
-
-        /* Real Battle Background */
-        #game-container {
-            width: 100vw;
-            height: 100vh;
-            background: url('https://getwallpapers.com/wallpaper/full/1/3/c/1261365-free-fire-wallpapers-1920x1080-for-iphone-5.jpg') no-repeat center center;
-            background-size: cover;
-            position: relative;
+        :root {
+            --primary: #0f0;
+            --bg: #050505;
+            --card-bg: #111;
         }
 
-        /* Player - Alok style */
-        #player {
-            width: 80px;
-            height: 110px;
-            background: url('https://www.pngmart.com/files/13/Free-Fire-Alok-PNG-Pic.png') no-repeat center;
-            background-size: contain;
-            position: absolute;
+        body {
+            background: var(--bg);
+            color: #eee;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header Area */
+        header {
+            background: #000;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--primary);
+            position: sticky;
+            top: 0;
             z-index: 100;
-            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
-            transition: 0.1s linear;
         }
 
-        /* Enemies - Real Character PNGs */
-        .enemy {
+        header h1 {
+            margin: 0;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px var(--primary);
+            font-size: 28px;
+        }
+
+        /* Search Bar */
+        .search-box {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #searchBar {
+            width: 90%;
+            max-width: 600px;
+            padding: 15px;
+            border-radius: 30px;
+            border: 1px solid var(--primary);
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            box-shadow: inset 0 0 5px var(--primary);
+        }
+
+        /* App Grid Area */
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 20px;
+        }
+
+        /* App Card UI */
+        .app-card {
+            background: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-8px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+        }
+
+        .app-icon {
             width: 70px;
-            height: 100px;
-            background: url('https://www.pngmart.com/files/13/Free-Fire-Kelly-PNG-Clipart.png') no-repeat center;
-            background-size: contain;
-            position: absolute;
-            transform: scaleX(-1);
-            filter: drop-shadow(0 0 5px red);
-        }
-
-        /* Bullet & Effects */
-        .bullet {
-            width: 30px;
-            height: 4px;
-            background: linear-gradient(90deg, #fff, #ffae00);
-            box-shadow: 0 0 15px #ffae00;
-            position: absolute;
-            border-radius: 5px;
-        }
-
-        /* Muzzle Flash Effect */
-        .flash {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            background: url('https://i.imgur.com/K2y6Xw8.png') no-repeat center;
-            background-size: contain;
-            z-index: 101;
-        }
-
-        /* HUD & Controls */
-        #hud {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 200;
-        }
-
-        .btn {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            border-radius: 50%;
-            pointer-events: auto;
+            height: 70px;
+            background: #222;
+            border-radius: 15px;
+            margin: 0 auto 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            font-size: 24px;
-            user-select: none;
-            backdrop-filter: blur(5px);
+            font-size: 30px;
+            border: 1px solid #333;
         }
 
-        .btn:active { background: rgba(255, 255, 255, 0.4); transform: scale(0.9); }
-
-        /* FF Style Control Layout */
-        #up { bottom: 160px; left: 80px; }
-        #down { bottom: 40px; left: 80px; }
-        #left { bottom: 100px; left: 20px; }
-        #right { bottom: 100px; left: 140px; }
-
-        #fire {
-            bottom: 60px;
-            right: 50px;
-            width: 110px;
-            height: 110px;
-            background: url('https://i.imgur.com/vHqLh7S.png') no-repeat center; /* Fire icon */
-            background-size: 70%;
-            background-color: rgba(255, 0, 0, 0.4);
-            border: 3px solid #f00;
-            box-shadow: 0 0 20px #f00;
+        .app-name {
+            display: block;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        #score-box {
-            position: absolute;
-            top: 30px; left: 30px;
-            color: #ffae00;
-            font-size: 22px;
-            text-shadow: 2px 2px #000;
+        .app-category {
+            display: block;
+            font-size: 10px;
+            color: var(--primary);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .download-btn {
+            display: block;
+            background: var(--primary);
+            color: #000;
+            padding: 8px 0;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 800;
+            transition: 0.2s;
+        }
+
+        .download-btn:active {
+            transform: scale(0.95);
+            background: #0a0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #444;
+            font-size: 13px;
+        }
+
+        /* Responsive Fix for Phones */
+        @media (max-width: 480px) {
+            .app-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
 
-<div id="game-container">
-    <div id="score-box">BOOYAH KILLS: <span id="kill-count">0</span></div>
-    <div id="player" style="top: 250px; left: 100px;"></div>
-    
-    <div id="hud">
-        <div class="btn" id="up" style="width:70px; height:70px;">▲</div>
-        <div class="btn" id="down" style="width:70px; height:70px;">▼</div>
-        <div class="btn" id="left" style="width:70px; height:70px;">◀</div>
-        <div class="btn" id="right" style="width:70px; height:70px;">▶</div>
-        <div class="btn" id="fire"></div>
-    </div>
+<header>
+    <h1>HASHU-MD STORE</h1>
+</header>
+
+<div class="search-box">
+    <input type="text" id="searchBar" placeholder="Search 30+ Apps..." onkeyup="searchApp()">
 </div>
 
+<div class="container">
+    <div class="app-grid" id="appGrid">
+        </div>
+</div>
+
+<footer>
+    &copy; 2026 DARK CYBER LEADERZ | DEVELOPED BY HASHU
+</footer>
+
 <script>
-    const player = document.getElementById('player');
-    const container = document.getElementById('game-container');
-    const killText = document.getElementById('kill-count');
-    let kills = 0;
-    
-    let x = 100, y = 250;
-    const speed = 30;
+    // App Data Array (30 Apps)
+    const apps = [
+        { name: "Cyber FF Clone", cat: "Game", icon: "🎮" },
+        { name: "HASHU-MD Bot", cat: "Tool", icon: "🤖" },
+        { name: "WhatsApp Multi", cat: "Social", icon: "💬" },
+        { name: "Termux Pro", cat: "System", icon: "📟" },
+        { name: "Vercel Deployer", cat: "Dev", icon: "🚀" },
+        { name: "PUBG GFX Tool", cat: "Game", icon: "🛠️" },
+        { name: "VPN Cyber", cat: "Security", icon: "🛡️" },
+        { name: "Auto Typer", cat: "Utility", icon: "⌨️" },
+        { name: "ID Checker FF", cat: "Tool", icon: "🔍" },
+        { name: "Dark Web Browser", cat: "Web", icon: "🌐" },
+        { name: "Logo Maker Pro", cat: "Design", icon: "🎨" },
+        { name: "Node.js Runner", cat: "Dev", icon: "🟢" },
+        { name: "Mega Downloader", cat: "Tool", icon: "☁️" },
+        { name: "Cyber Music", cat: "Media", icon: "🎵" },
+        { name: "Hashu Editor", cat: "Photo", icon: "📸" },
+        { name: "Bot Creator", cat: "Dev", icon: "🏗️" },
+        { name: "Free Fire Max Mod", cat: "Game", icon: "🔥" },
+        { name: "Temp Mail Maker", cat: "Tool", icon: "📧" },
+        { name: "Speed Test", cat: "System", icon: "⚡" },
+        { name: "Packet Sniffer", cat: "Hacking", icon: "📡" },
+        { name: "App Cloner", cat: "System", icon: "👥" },
+        { name: "Python Mobile", cat: "Dev", icon: "🐍" },
+        { name: "File Encryptor", cat: "Security", icon: "🔐" },
+        { name: "YT Downloader", cat: "Video", icon: "🎥" },
+        { name: "Cyber Cleaner", cat: "Utility", icon: "🧹" },
+        { name: "Code Viewer", cat: "Dev", icon: "📄" },
+        { name: "FF Skin Tool", cat: "Game", icon: "👕" },
+        { name: "WA Status Saver", cat: "Social", icon: "📥" },
+        { name: "Port Scanner", cat: "Security", icon: "⛓️" },
+        { name: "HASHU OS Theme", cat: "UI", icon: "📱" }
+    ];
 
-    function update() {
-        player.style.left = x + 'px';
-        player.style.top = y + 'px';
+    const appGrid = document.getElementById('appGrid');
+
+    // Function to display apps
+    function displayApps(appArray) {
+        appGrid.innerHTML = "";
+        appArray.forEach(app => {
+            appGrid.innerHTML += `
+                <div class="app-card">
+                    <div class="app-icon">${app.icon}</div>
+                    <span class="app-name">${app.name}</span>
+                    <span class="app-category">${app.cat}</span>
+                    <a href="#" class="download-btn">GET APP</a>
+                </div>
+            `;
+        });
     }
 
-    // Movement
-    document.getElementById('up').onclick = () => { if(y > 50) y -= speed; update(); };
-    document.getElementById('down').onclick = () => { if(y < container.offsetHeight - 150) y += speed; update(); };
-    document.getElementById('left').onclick = () => { if(x > 20) x -= speed; update(); };
-    document.getElementById('right').onclick = () => { if(x < container.offsetWidth - 150) x += speed; update(); };
+    // Initial Display
+    displayApps(apps);
 
-    // Fire & Muzzle Flash
-    document.getElementById('fire').onclick = () => {
-        // Flash Effect
-        const flash = document.createElement('div');
-        flash.className = 'flash';
-        flash.style.top = (y + 35) + 'px';
-        flash.style.left = (x + 65) + 'px';
-        container.appendChild(flash);
-        setTimeout(() => flash.remove(), 50);
-
-        // Bullet
-        const b = document.createElement('div');
-        b.className = 'bullet';
-        b.style.top = (y + 55) + 'px';
-        b.style.left = (x + 80) + 'px';
-        container.appendChild(b);
-
-        let moveB = setInterval(() => {
-            let bLeft = parseInt(b.style.left);
-            b.style.left = (bLeft + 25) + 'px';
-
-            let enemies = document.getElementsByClassName('enemy');
-            for(let en of enemies) {
-                let er = en.getBoundingClientRect();
-                let br = b.getBoundingClientRect();
-
-                if(!(br.top > er.bottom || br.bottom < er.top || br.right < er.left || br.left > er.right)) {
-                    en.style.filter = "brightness(5) hue-rotate(90deg)";
-                    setTimeout(() => en.remove(), 100);
-                    b.remove();
-                    clearInterval(moveB);
-                    kills++;
-                    killText.innerText = kills;
-                }
-            }
-            if(bLeft > window.innerWidth) { clearInterval(moveB); b.remove(); }
-        }, 20);
-    };
-
-    // Enemy Spawn
-    function spawn() {
-        const e = document.createElement('div');
-        e.className = 'enemy';
-        e.style.top = (Math.random() * (container.offsetHeight - 200) + 50) + 'px';
-        e.style.right = "-100px";
-        container.appendChild(e);
-
-        let moveE = setInterval(() => {
-            let eRight = parseInt(e.style.right);
-            e.style.right = (eRight + 7) + 'px';
-            if(eRight > window.innerWidth + 100) { clearInterval(moveE); e.remove(); }
-        }, 30);
+    // Search Logic
+    function searchApp() {
+        let term = document.getElementById('searchBar').value.toLowerCase();
+        let filtered = apps.filter(a => a.name.toLowerCase().includes(term));
+        displayApps(filtered);
     }
-
-    setInterval(spawn, 1500);
 </script>
 
 </body>
