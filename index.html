@@ -3,32 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HASHU CYBER SHOOTER</title>
+    <title>HASHU CYBER BATTLE PRO</title>
     <style>
-        body { margin: 0; background: #000; font-family: 'Courier New', Courier, monospace; overflow: hidden; touch-action: manipulation; }
-        #game-container { position: relative; width: 100vw; height: 70vh; background: #111; border-bottom: 3px solid #0f0; overflow: hidden; }
-        #player { position: absolute; width: 40px; height: 40px; background: #0f0; border-radius: 5px; box-shadow: 0 0 15px #0f0; transition: top 0.1s; }
-        .bullet { position: absolute; width: 15px; height: 4px; background: #ff0; box-shadow: 0 0 10px #ff0; }
-        .enemy { position: absolute; width: 35px; height: 35px; background: #f00; border-radius: 50%; box-shadow: 0 0 15px #f00; }
-        #controls { height: 30vh; display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 10px; gap: 10px; background: #222; }
-        .btn { background: #333; color: #0f0; border: 2px solid #0f0; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; user-select: none; }
-        .btn:active { background: #0f0; color: #000; }
-        #score-board { position: absolute; top: 10px; left: 10px; color: #0f0; font-size: 18px; z-index: 10; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; overflow: hidden; font-family: sans-serif; }
+        
+        /* Battle Zone */
+        #game-zone {
+            width: 100vw;
+            height: 100vh;
+            background: url('https://wallpaperaccess.com/full/1594957.jpg'); 
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* Player */
+        #player {
+            width: 70px;
+            height: 90px;
+            background: url('https://www.pngmart.com/files/13/Free-Fire-Alok-PNG-Pic.png') no-repeat;
+            background-size: contain;
+            position: absolute;
+            z-index: 10;
+            filter: drop-shadow(0 0 5px #0f0);
+            transition: 0.1s linear;
+        }
+
+        .enemy {
+            width: 60px;
+            height: 80px;
+            background: url('https://www.pngmart.com/files/13/Free-Fire-Kelly-PNG-Clipart.png') no-repeat;
+            background-size: contain;
+            position: absolute;
+            transform: scaleX(-1);
+        }
+
+        .bullet {
+            width: 20px;
+            height: 6px;
+            background: #ffea00;
+            box-shadow: 0 0 10px #ff0;
+            position: absolute;
+            border-radius: 5px;
+        }
+
+        /* HUD - Overlay Controls */
+        #hud {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none; /* Allows clicking through HUD elements */
+            z-index: 20;
+        }
+
+        .control-btn {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(0, 255, 0, 0.5);
+            border-radius: 50%;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0f0;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .control-btn:active { background: rgba(0, 255, 0, 0.4); }
+
+        /* Free Fire Style Layout */
+        #joy-up { bottom: 150px; left: 70px; }
+        #joy-down { bottom: 30px; left: 70px; }
+        #joy-left { bottom: 90px; left: 10px; }
+        #joy-right { bottom: 90px; left: 130px; }
+
+        #fire-btn {
+            bottom: 60px;
+            right: 40px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 0, 0, 0.3);
+            border-color: #f00;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        #score-board {
+            position: absolute;
+            top: 20px; left: 20px;
+            color: #fff;
+            font-size: 20px;
+            text-shadow: 2px 2px #000;
+        }
     </style>
 </head>
 <body>
 
-<div id="score-board">SCORE: <span id="score">0</span></div>
-<div id="game-container">
-    <div id="player" style="top: 50%; left: 20px;"></div>
+<div id="game-zone">
+    <div id="score-board">KILLS: <span id="kills">0</span></div>
+    <div id="player" style="top: 200px; left: 50px;"></div>
+    
+    <div id="hud">
+        <div class="control-btn" id="joy-up">▲</div>
+        <div class="control-btn" id="joy-down">▼</div>
+        <div class="control-btn" id="joy-left">◀</div>
+        <div class="control-btn" id="joy-right">▶</div>
+        
+        <div class="control-btn" id="fire-btn">🔥</div>
+    </div>
 </div>
 
-<div id="controls">
-    <div class="btn" id="upBtn">UP</div>
-    <div class="btn" id="shootBtn" style="background: #500; border-color: #f00; color: #fff;">FIRE 🔫</div>
-    <div class="btn" id="downBtn">DOWN</div>
-</div>
+<script>
+    const player = document.getElementById('player');
+    const zone = document.getElementById('game-zone');
+    const killDisp = document.getElementById('kills');
+    let kills = 0;
+    
+    let pX = 50;
+    let pY = 200;
+    const speed = 25;
 
-<script src="game.js"></script>
+    // Movement Logic
+    function updatePos() {
+        player.style.left = pX + 'px';
+        player.style.top = pY + 'px';
+    }
+
+    document.getElementById('joy-up').onclick = () => { if(pY > 0) pY -= speed; updatePos(); };
+    document.getElementById('joy-down').onclick = () => { if(pY < zone.offsetHeight - 100) pY += speed; updatePos(); };
+    document.getElementById('joy-left').onclick = () => { if(pX > 0) pX -= speed; updatePos(); };
+    document.getElementById('joy-right').onclick = () => { if(pX < zone.offsetWidth - 200) pX += speed; updatePos(); };
+
+    // Fire Logic
+    document.getElementById('fire-btn').onclick = () => {
+        const b = document.createElement('div');
+        b.className = 'bullet';
+        b.style.top = (pY + 45) + 'px';
+        b.style.left = (pX + 60) + 'px';
+        zone.appendChild(b);
+
+        let bMove = setInterval(() => {
+            let curLeft = parseInt(b.style.left);
+            b.style.left = (curLeft + 20) + 'px';
+
+            // Hit Detection
+            let enemies = document.getElementsByClassName('enemy');
+            for(let en of enemies) {
+                let er = en.getBoundingClientRect();
+                let br = b.getBoundingClientRect();
+
+                if(!(br.top > er.bottom || br.bottom < er.top || br.right < er.left || br.left > er.right)) {
+                    en.remove();
+                    b.remove();
+                    clearInterval(bMove);
+                    kills++;
+                    killDisp.innerText = kills;
+                }
+            }
+
+            if(curLeft > window.innerWidth) {
+                clearInterval(bMove);
+                b.remove();
+            }
+        }, 20);
+    };
+
+    // Spawn Enemies
+    function spawn() {
+        const e = document.createElement('div');
+        e.className = 'enemy';
+        e.style.top = Math.random() * (zone.offsetHeight - 100) + 'px';
+        e.style.right = "-60px";
+        zone.appendChild(e);
+
+        let eMove = setInterval(() => {
+            let r = parseInt(e.style.right);
+            e.style.right = (r + 5) + 'px';
+            if(r > window.innerWidth + 100) {
+                clearInterval(eMove);
+                e.remove();
+            }
+        }, 30);
+    }
+
+    setInterval(spawn, 2000);
+</script>
+
 </body>
-</html>
+                                                    </html>
