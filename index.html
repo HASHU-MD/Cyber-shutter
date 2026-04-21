@@ -3,195 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HASHU CYBER BATTLE PRO</title>
+    <title>HASHU-MD FF CLONE PRO</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; overflow: hidden; font-family: sans-serif; }
-        
-        /* Battle Zone */
-        #game-zone {
+        body { background: #000; overflow: hidden; font-family: 'Arial Black', sans-serif; }
+
+        /* Real Battle Background */
+        #game-container {
             width: 100vw;
             height: 100vh;
-            background: url('https://wallpaperaccess.com/full/1594957.jpg'); 
+            background: url('https://getwallpapers.com/wallpaper/full/1/3/c/1261365-free-fire-wallpapers-1920x1080-for-iphone-5.jpg') no-repeat center center;
             background-size: cover;
-            background-position: center;
             position: relative;
         }
 
-        /* Player */
+        /* Player - Alok style */
         #player {
-            width: 70px;
-            height: 90px;
-            background: url('https://www.pngmart.com/files/13/Free-Fire-Alok-PNG-Pic.png') no-repeat;
+            width: 80px;
+            height: 110px;
+            background: url('https://www.pngmart.com/files/13/Free-Fire-Alok-PNG-Pic.png') no-repeat center;
             background-size: contain;
             position: absolute;
-            z-index: 10;
-            filter: drop-shadow(0 0 5px #0f0);
+            z-index: 100;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
             transition: 0.1s linear;
         }
 
+        /* Enemies - Real Character PNGs */
         .enemy {
-            width: 60px;
-            height: 80px;
-            background: url('https://www.pngmart.com/files/13/Free-Fire-Kelly-PNG-Clipart.png') no-repeat;
+            width: 70px;
+            height: 100px;
+            background: url('https://www.pngmart.com/files/13/Free-Fire-Kelly-PNG-Clipart.png') no-repeat center;
             background-size: contain;
             position: absolute;
             transform: scaleX(-1);
+            filter: drop-shadow(0 0 5px red);
         }
 
+        /* Bullet & Effects */
         .bullet {
-            width: 20px;
-            height: 6px;
-            background: #ffea00;
-            box-shadow: 0 0 10px #ff0;
+            width: 30px;
+            height: 4px;
+            background: linear-gradient(90deg, #fff, #ffae00);
+            box-shadow: 0 0 15px #ffae00;
             position: absolute;
             border-radius: 5px;
         }
 
-        /* HUD - Overlay Controls */
+        /* Muzzle Flash Effect */
+        .flash {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: url('https://i.imgur.com/K2y6Xw8.png') no-repeat center;
+            background-size: contain;
+            z-index: 101;
+        }
+
+        /* HUD & Controls */
         #hud {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            pointer-events: none; /* Allows clicking through HUD elements */
-            z-index: 20;
+            pointer-events: none;
+            z-index: 200;
         }
 
-        .control-btn {
+        .btn {
             position: absolute;
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(0, 255, 0, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.4);
             border-radius: 50%;
             pointer-events: auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #0f0;
-            font-weight: bold;
+            color: #fff;
+            font-size: 24px;
             user-select: none;
+            backdrop-filter: blur(5px);
         }
 
-        .control-btn:active { background: rgba(0, 255, 0, 0.4); }
+        .btn:active { background: rgba(255, 255, 255, 0.4); transform: scale(0.9); }
 
-        /* Free Fire Style Layout */
-        #joy-up { bottom: 150px; left: 70px; }
-        #joy-down { bottom: 30px; left: 70px; }
-        #joy-left { bottom: 90px; left: 10px; }
-        #joy-right { bottom: 90px; left: 130px; }
+        /* FF Style Control Layout */
+        #up { bottom: 160px; left: 80px; }
+        #down { bottom: 40px; left: 80px; }
+        #left { bottom: 100px; left: 20px; }
+        #right { bottom: 100px; left: 140px; }
 
-        #fire-btn {
+        #fire {
             bottom: 60px;
-            right: 40px;
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 0, 0, 0.3);
-            border-color: #f00;
-            color: #fff;
-            font-size: 20px;
+            right: 50px;
+            width: 110px;
+            height: 110px;
+            background: url('https://i.imgur.com/vHqLh7S.png') no-repeat center; /* Fire icon */
+            background-size: 70%;
+            background-color: rgba(255, 0, 0, 0.4);
+            border: 3px solid #f00;
+            box-shadow: 0 0 20px #f00;
         }
 
-        #score-board {
+        #score-box {
             position: absolute;
-            top: 20px; left: 20px;
-            color: #fff;
-            font-size: 20px;
+            top: 30px; left: 30px;
+            color: #ffae00;
+            font-size: 22px;
             text-shadow: 2px 2px #000;
         }
     </style>
 </head>
 <body>
 
-<div id="game-zone">
-    <div id="score-board">KILLS: <span id="kills">0</span></div>
-    <div id="player" style="top: 200px; left: 50px;"></div>
+<div id="game-container">
+    <div id="score-box">BOOYAH KILLS: <span id="kill-count">0</span></div>
+    <div id="player" style="top: 250px; left: 100px;"></div>
     
     <div id="hud">
-        <div class="control-btn" id="joy-up">▲</div>
-        <div class="control-btn" id="joy-down">▼</div>
-        <div class="control-btn" id="joy-left">◀</div>
-        <div class="control-btn" id="joy-right">▶</div>
-        
-        <div class="control-btn" id="fire-btn">🔥</div>
+        <div class="btn" id="up" style="width:70px; height:70px;">▲</div>
+        <div class="btn" id="down" style="width:70px; height:70px;">▼</div>
+        <div class="btn" id="left" style="width:70px; height:70px;">◀</div>
+        <div class="btn" id="right" style="width:70px; height:70px;">▶</div>
+        <div class="btn" id="fire"></div>
     </div>
 </div>
 
 <script>
     const player = document.getElementById('player');
-    const zone = document.getElementById('game-zone');
-    const killDisp = document.getElementById('kills');
+    const container = document.getElementById('game-container');
+    const killText = document.getElementById('kill-count');
     let kills = 0;
     
-    let pX = 50;
-    let pY = 200;
-    const speed = 25;
+    let x = 100, y = 250;
+    const speed = 30;
 
-    // Movement Logic
-    function updatePos() {
-        player.style.left = pX + 'px';
-        player.style.top = pY + 'px';
+    function update() {
+        player.style.left = x + 'px';
+        player.style.top = y + 'px';
     }
 
-    document.getElementById('joy-up').onclick = () => { if(pY > 0) pY -= speed; updatePos(); };
-    document.getElementById('joy-down').onclick = () => { if(pY < zone.offsetHeight - 100) pY += speed; updatePos(); };
-    document.getElementById('joy-left').onclick = () => { if(pX > 0) pX -= speed; updatePos(); };
-    document.getElementById('joy-right').onclick = () => { if(pX < zone.offsetWidth - 200) pX += speed; updatePos(); };
+    // Movement
+    document.getElementById('up').onclick = () => { if(y > 50) y -= speed; update(); };
+    document.getElementById('down').onclick = () => { if(y < container.offsetHeight - 150) y += speed; update(); };
+    document.getElementById('left').onclick = () => { if(x > 20) x -= speed; update(); };
+    document.getElementById('right').onclick = () => { if(x < container.offsetWidth - 150) x += speed; update(); };
 
-    // Fire Logic
-    document.getElementById('fire-btn').onclick = () => {
+    // Fire & Muzzle Flash
+    document.getElementById('fire').onclick = () => {
+        // Flash Effect
+        const flash = document.createElement('div');
+        flash.className = 'flash';
+        flash.style.top = (y + 35) + 'px';
+        flash.style.left = (x + 65) + 'px';
+        container.appendChild(flash);
+        setTimeout(() => flash.remove(), 50);
+
+        // Bullet
         const b = document.createElement('div');
         b.className = 'bullet';
-        b.style.top = (pY + 45) + 'px';
-        b.style.left = (pX + 60) + 'px';
-        zone.appendChild(b);
+        b.style.top = (y + 55) + 'px';
+        b.style.left = (x + 80) + 'px';
+        container.appendChild(b);
 
-        let bMove = setInterval(() => {
-            let curLeft = parseInt(b.style.left);
-            b.style.left = (curLeft + 20) + 'px';
+        let moveB = setInterval(() => {
+            let bLeft = parseInt(b.style.left);
+            b.style.left = (bLeft + 25) + 'px';
 
-            // Hit Detection
             let enemies = document.getElementsByClassName('enemy');
             for(let en of enemies) {
                 let er = en.getBoundingClientRect();
                 let br = b.getBoundingClientRect();
 
                 if(!(br.top > er.bottom || br.bottom < er.top || br.right < er.left || br.left > er.right)) {
-                    en.remove();
+                    en.style.filter = "brightness(5) hue-rotate(90deg)";
+                    setTimeout(() => en.remove(), 100);
                     b.remove();
-                    clearInterval(bMove);
+                    clearInterval(moveB);
                     kills++;
-                    killDisp.innerText = kills;
+                    killText.innerText = kills;
                 }
             }
-
-            if(curLeft > window.innerWidth) {
-                clearInterval(bMove);
-                b.remove();
-            }
+            if(bLeft > window.innerWidth) { clearInterval(moveB); b.remove(); }
         }, 20);
     };
 
-    // Spawn Enemies
+    // Enemy Spawn
     function spawn() {
         const e = document.createElement('div');
         e.className = 'enemy';
-        e.style.top = Math.random() * (zone.offsetHeight - 100) + 'px';
-        e.style.right = "-60px";
-        zone.appendChild(e);
+        e.style.top = (Math.random() * (container.offsetHeight - 200) + 50) + 'px';
+        e.style.right = "-100px";
+        container.appendChild(e);
 
-        let eMove = setInterval(() => {
-            let r = parseInt(e.style.right);
-            e.style.right = (r + 5) + 'px';
-            if(r > window.innerWidth + 100) {
-                clearInterval(eMove);
-                e.remove();
-            }
+        let moveE = setInterval(() => {
+            let eRight = parseInt(e.style.right);
+            e.style.right = (eRight + 7) + 'px';
+            if(eRight > window.innerWidth + 100) { clearInterval(moveE); e.remove(); }
         }, 30);
     }
 
-    setInterval(spawn, 2000);
+    setInterval(spawn, 1500);
 </script>
 
 </body>
-                                                    </html>
+</html>
